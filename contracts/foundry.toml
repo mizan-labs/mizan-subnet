@@ -1,0 +1,22 @@
+[profile.default]
+src = "."
+out = "out"
+libs = ["lib"]
+solc = "0.8.20"
+
+[profile.default.optimizer]
+enabled = true
+runs = 200
+
+[fuzz]
+runs = 256
+max_test_rejects = 65536
+
+[invariant]
+runs = 256
+depth = 15
+
+[fmt]
+line_length = 100
+tab_width = 4
+bracket_spacing = false

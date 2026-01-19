@@ -1,0 +1,25 @@
+{
+  "name": "mizan-zk",
+  "version": "0.1.0",
+  "description": "ZK circuits for stablecoin integrity proofs",
+  "type": "module",
+  "scripts": {
+    "compile:solvency": "circom circuits/solvency.circom --r1cs --wasm --sym -o build/",
+    "compile:supply": "circom circuits/supply.circom --r1cs --wasm --sym -o build/",
+    "compile:risk": "circom circuits/risk_bounds.circom --r1cs --wasm --sym -o build/",
+    "compile:epoch": "circom circuits/epoch.circom --r1cs --wasm --sym -o build/",
+    "compile:all": "npm run compile:solvency && npm run compile:supply && npm run compile:risk && npm run compile:epoch",
+    "setup": "snarkjs groth16 setup build/solvency.r1cs keys/pot12_final.ptau keys/solvency.zkey",
+    "export:verifier": "snarkjs zkey export solidityverifier keys/solvency.zkey ../contracts/verifier/Groth16Verifier.sol",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "snarkjs": "^0.7.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "jest": "^29.7.0",
+    "typescript": "^5.3.0"
+  }
+}

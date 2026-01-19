@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Build outputs
+zk/build/
+contracts/out/
+contracts/cache/
+contracts/lib/
+dist/
+*.egg-info/
+
+# Keys (sensitive!)
+zk/keys/*.zkey
+zk/keys/*.ptau
+issuer/keys/
+
+# Private data (NEVER commit!)
+issuer/ledger/balances.json
+issuer/ledger/collateral.json
+issuer/ledger/history.json
+*.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test outputs
+coverage/
+.coverage
+htmlcov/
+
+# Web build
+web/.next/
+web/out/
