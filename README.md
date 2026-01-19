@@ -2,71 +2,121 @@
 
 > **"ZK enforces facts, Bittensor enforces meaning."**
 
-A monetary-integrity intelligence market where proofs are private, verification is public.
+A monetary-integrity intelligence market where proofs are private, but verification is public.
 
-## Overview
+## 🌟 Why Bittensor?
 
-This subnet creates a decentralized verification layer for stablecoin integrity. Issuers generate zero-knowledge proofs of solvency, and Bittensor miners compete to analyze and score these proofs.
+Zero-Knowledge proofs are essentially just **math**. A smart contract can verify that $(a \times b) = c$, but it cannot verify **Context** or **Quality**.
 
-## Architecture
+We use Bittensor to bridge the gap between "Cryptographically Valid" and "Financially Healthy":
 
+1.  **Liveness Verification**: A proof might be valid, but if the issuer's data API is offline, transparency is zero. Miners verify availability.
+2.  **Policy Enforcement**: Issuers might try to generate valid proofs using *outdated* policies (e.g., 100% collateral instead of 150%). Miners enforce the *latest* policy.
+3.  **Risk Analysis**: A proof is binary (Permit/Revert). An Integrity Score is a spectrum (0.0 to 1.0). Miners compete to calculate the most accurate risk attributes.
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph LR
+    I[Issuer] -->|Ledger Data| ZK[ZK Circuit]
+    ZK -->|Merle Roots| SC[Smart Contract]
+    ZK -->|ZK Proof| SC
+    SC -->|IntegrityProven Event| M[Miner]
+    M -->|Analysis & Score| V[Validator]
+    V -->|Consensus| W[Weights]
+    W -->|Incentives| T[TAO]
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         EPOCH FLOW                              │
-├─────────────────────────────────────────────────────────────────┤
-│  Issuer → Proof + Roots → Contract → Miners → Validators → TAO │
-└─────────────────────────────────────────────────────────────────┘
+
+## 🛠️ Project Structure
+
+*   `zk/` — **The Truth Machine**. Circom circuits (`solvency.circom`, `supply.circom`) proving assets $\ge$ liabilities.
+*   `contracts/` — **The Registry**. Solidity contracts (`IntegrityRegistry.sol`) storing proof commitments.
+*   `subnet/` — **The Intelligence**. Python code for Miners (analyzers) and Validators (scorers).
+*   `issuer/` — **The Prover**. Private pipeline for issuers to connect their SQL/Ledger to ZK generation.
+*   `web/` — **The Window**. Next.js 16 dashboard visualizing the integrity scores.
+
+---
+
+## ⛏️ How to Mine (Become a Miner)
+
+Miners in this subnet act as **Decentralized Auditors**. You don't need the private data; you verify the public artifacts.
+
+### 1. Requirements
+*   **Hardware**: Min. 16GB RAM, 8 vCPU (for fast Groth16 verification).
+*   **Wallet**: A Bittensor wallet with a registered hotkey.
+*   **Code base**: This repository.
+
+### 2. Setup Miner
+```bash
+# Clone and install
+git clone https://github.com/mizan-labs/mizan-subnet
+cd mizan-subnet
+pip install -e .
+
+# Configure wallet (requires registration)
+export WALLET_NAME="mywallet"
+export WALLET_HOTKEY="myhotkey"
 ```
 
-## Directory Structure
-
-```
-├── web/        # Next.js 16 transparency dashboard
-├── contracts/  # EVM smart contracts (Foundry)
-├── subnet/     # Bittensor subnet (miner/validator)
-├── zk/         # Circom circuits & provers
-├── issuer/     # Private prover (issuer-side)
-├── docs/       # Documentation
-└── scripts/    # Utility scripts
+### 3. Start Mining
+```bash
+python -m subnet.miner.main \
+  --wallet.name $WALLET_NAME \
+  --wallet.hotkey $WALLET_HOTKEY \
+  --netuid <subnet_uid>
 ```
 
-## Quick Start
+### 4. How to Win (Get Rewards)
+*   **Be Fast**: Validate new proofs as soon as they appear in the mempool/event logs.
+*   **Be Accurate**: Do not validate proofs that use outdated Policy Hashes (see `contracts/PolicyRegistry.sol`).
+*   **Be Available**: Ensure your Axon is open for Validator queries.
+
+---
+
+## 🚀 Quick Start (Development)
 
 ### Prerequisites
-- Node.js 20+
-- Rust (for Circom)
-- Python 3.10+ (for subnet)
-- Foundry (for contracts)
+*   Node.js 20+
+*   Rust (for Circom)
+*   Python 3.10+
+*   Foundry
 
-### Setup
-
+### 1. Install Dependencies
 ```bash
-# Install Circom
-curl -L https://raw.githubusercontent.com/iden3/circomlib/master/scripts/install-circom.sh | bash
-
-# Install ZK dependencies
+# ZK Circuits
 cd zk && npm install
 
-# Install subnet dependencies
-cd subnet && pip install -e .
+# Subnet (Python)
+cd ../subnet && pip install -e .
 
-# Install web dependencies
-cd web && npm install
+# Web Dashboard
+cd ../web && npm install
 
-# Install contract dependencies
-cd contracts && forge install
+# Smart Contracts
+cd ../contracts && forge install
 ```
 
-## Phases
+### 2. Compile Circuits
+```bash
+cd zk
+npm run compile:all
+```
 
-1. **ZK Core** - Circom circuits for solvency proofs
-2. **Smart Contracts** - On-chain verification
-3. **Issuer Pipeline** - Proof generation from private data
-4. **Subnet Skeleton** - Bittensor miner/validator
-5. **Competition Layer** - Multi-miner dynamics
-6. **Web UI** - Transparency dashboard
-7. **Documentation** - Architecture & compliance docs
+### 3. Run Web Dashboard
+```bash
+cd web
+npm run dev
+```
 
-## License
+---
 
-MIT
+## 📚 Documentation
+
+Detailed documentation is available in `docs/` or via the [Web Dashboard /docs](http://localhost:3000/docs):
+
+*   [System Architecture](docs/architecture.md)
+*   [ZK Circuit Design](docs/zk_design.md)
+*   [Subnet Economics](docs/subnet_economics.md)
+*   [Integration Guide](docs/integration_guide.md)
