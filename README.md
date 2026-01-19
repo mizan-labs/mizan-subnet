@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://via.placeholder.com/200x200.png?text=M" alt="Mizan Logo" width="120" />
-</p>
-
 <h1 align="center">Mizan Subnet</h1>
 
 <p align="center">
